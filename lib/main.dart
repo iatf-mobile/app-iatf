@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iatf_mobile/ui/register/register_screen.dart';
 
 import 'theme.dart';
 import 'util.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
       // Segue o sistema do celular
       themeMode: ThemeMode.system,
 
-      home: const LoginScreen(),
+      home: const RegisterScreen(),
     );
   }
 }
