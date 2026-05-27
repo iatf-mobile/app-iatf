@@ -28,7 +28,6 @@ class _HomeView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      bottomNavigationBar: const _BottomNav(),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
@@ -360,46 +359,6 @@ class _FooterSection extends StatelessWidget {
         ),
         child: const Text('Ver todos'),
       ),
-    );
-  }
-}
-
-class _BottomNav extends StatelessWidget {
-  const _BottomNav();
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationBar(
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
-      selectedIndex: 0,
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.home_outlined),
-          selectedIcon: Icon(Icons.home_rounded),
-          label: 'Home',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.assignment_outlined),
-          selectedIcon: Icon(Icons.assignment_rounded),
-          label: 'Ficha',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.science_outlined),
-          selectedIcon: Icon(Icons.science_rounded),
-          label: 'Protocolos',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.landscape_outlined),
-          selectedIcon: Icon(Icons.landscape_rounded),
-          label: 'Fazendas',
-        ),
-      ],
-      onDestinationSelected: (index) {
-        switch (index) {
-          case 0: context.go(AppRoutes.home);
-          case 2: context.go(AppRoutes.protocols);
-        }
-      },
     );
   }
 }
