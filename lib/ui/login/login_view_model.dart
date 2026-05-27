@@ -8,6 +8,7 @@ class LoginState {
   final bool isPasswordVisible;
   final bool isLoading;
   final String? errorMessage;
+  final bool isAuthenticated;
 
   const LoginState({
     this.email = '',
@@ -16,6 +17,7 @@ class LoginState {
     this.isPasswordVisible = false,
     this.isLoading = false,
     this.errorMessage,
+    this.isAuthenticated = false,
   });
 
   LoginState copyWith({
@@ -26,6 +28,7 @@ class LoginState {
     bool? isLoading,
     String? errorMessage,
     bool clearError = false,
+    bool? isAuthenticated,
   }) {
     return LoginState(
       email: email ?? this.email,
@@ -34,6 +37,7 @@ class LoginState {
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
     );
   }
 }
@@ -70,6 +74,7 @@ class LoginViewModel extends ChangeNotifier {
 
   Future<void> onLoginPressed() async {
     final error = _validate();
+
     if (error != null) {
       _state = _state.copyWith(errorMessage: error);
       notifyListeners();
@@ -81,29 +86,36 @@ class LoginViewModel extends ChangeNotifier {
 
     try {
       // TODO: injetar AuthRepository e chamar o login real.
-      // Ex: await _authRepository.login(email: _state.email, password: _state.password);
       await Future.delayed(const Duration(seconds: 2)); // simulação
+      _state = _state.copyWith(isLoading: false, isAuthenticated: true);
+      notifyListeners();
     } catch (e) {
       _state = _state.copyWith(
         isLoading: false,
         errorMessage: 'Erro ao entrar. Verifique seus dados.',
       );
     } finally {
-      _state = _state.copyWith(isLoading: false);
-      notifyListeners();
+      if (!_state.isAuthenticated) {
+        _state = _state.copyWith(isLoading: false);
+        notifyListeners();
+      }
     }
   }
 
   Future<void> onGoogleLoginPressed() async {
-    _state = _state.copyWith(isLoading: true, clearError: true);
+    _state = _state.copyWith(isLoading: false, clearError: true);
     notifyListeners();
 
     try {
       // TODO: implementar Google Sign-In
       await Future.delayed(const Duration(seconds: 1));
-    } finally {
-      _state = _state.copyWith(isLoading: false);
+      _state = _state.copyWith(isLoading: false, isAuthenticated: true);
       notifyListeners();
+    } finally {
+      if (_state.isAuthenticated) {
+        _state = _state.copyWith(isLoading: false);
+        notifyListeners();
+      }
     }
   }
 
@@ -111,15 +123,15 @@ class LoginViewModel extends ChangeNotifier {
     // TODO: navegar para tela de recuperação de senha
   }
 
-  void onRegisterPressed() {
-    // TODO: navegar para tela de cadastro
-  }
+  void onRegisterPressed() {}
 
   /// Retorna uma mensagem de erro ou null se válido
   String? _validate() {
     if (_state.email.trim().isEmpty) return 'Informe seu e-mail.';
     if (!_state.email.contains('@')) return 'E-mail inválido.';
-    if (_state.password.length < 8) return 'Senha deve ter ao menos 8 caracteres.';
+    if (_state.password.length < 8) {
+      return 'Senha deve ter ao menos 8 caracteres.';
+    }
     return null;
   }
 }
