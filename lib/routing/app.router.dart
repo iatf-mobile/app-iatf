@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iatf_mobile/ui/protocols/protocols_screen.dart';
 
 import '../ui/login/login_screen.dart';
 import '../ui/register/register_screen.dart';
@@ -35,5 +36,9 @@ final appRouter = GoRouter(
       path: AppRoutes.profile,
       builder: (context, state) => const ProfileScreen(),
     ),
+    GoRoute(
+      path: AppRoutes.protocols, 
+      builder: (context, state) => const ProtocolsScreen(),
+      ),
   ],
 );

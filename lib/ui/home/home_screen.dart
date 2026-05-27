@@ -395,7 +395,10 @@ class _BottomNav extends StatelessWidget {
         ),
       ],
       onDestinationSelected: (index) {
-        // TODO: integrar com ShellRoute no GoRouter
+        switch (index) {
+          case 0: context.go(AppRoutes.home);
+          case 2: context.go(AppRoutes.protocols);
+        }
       },
     );
   }
