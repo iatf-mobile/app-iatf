@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iatf_mobile/ui/protocols/protocols_screen.dart';
 
+import 'package:iatf_mobile/ui/core/ui/main_screen.dart';
+import 'package:iatf_mobile/ui/protocols/protocols_screen.dart';
 import '../ui/login/login_screen.dart';
 import '../ui/register/register_screen.dart';
-import '../ui/home/home_screen.dart';
 import '../ui/profile/profile_screen.dart';
 import 'app_routes.dart';
 
@@ -30,7 +30,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: AppRoutes.home,
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => const MainScreen(),
     ),
     GoRoute(
       path: AppRoutes.profile,
