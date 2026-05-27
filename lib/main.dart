@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:iatf_mobile/ui/register/register_screen.dart';
-
 import 'theme.dart';
 import 'util.dart';
-import 'ui/login/login_screen.dart';
+import 'routing/app.router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,9 +18,12 @@ class MyApp extends StatelessWidget {
     // Usa o textTheme pra montar o ThemeData completo
     final materialTheme = MaterialTheme(textTheme);
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'IATF Mobile',
       debugShowCheckedModeBanner: false,
+
+      // Rotas
+      routerConfig: appRouter,
 
       // Tema claro
       theme: materialTheme.light(),
@@ -31,9 +32,8 @@ class MyApp extends StatelessWidget {
       darkTheme: materialTheme.dark(),
 
       // Segue o sistema do celular
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.system
 
-      home: const RegisterScreen(),
     );
   }
 }

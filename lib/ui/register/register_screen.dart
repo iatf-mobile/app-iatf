@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:iatf_mobile/routing/app_routes.dart';
 import 'package:provider/provider.dart';
 
 import 'register_view_model.dart';
@@ -21,6 +23,16 @@ class _RegisterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAuthenticated = context.select<RegisterViewModel, bool>(
+      (vm) => vm.state.isAuthenticated,
+    );
+
+    if (isAuthenticated) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.go(AppRoutes.login);
+      });
+    }
+
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -36,7 +48,7 @@ class _RegisterView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(28),
                 boxShadow: [
                   BoxShadow(
-                    color: cs.shadow.withAlpha(50),
+                    color: cs.shadow.withAlpha(20),
                     blurRadius: 20,
                     offset: const Offset(0, 4),
                   ),
@@ -88,7 +100,7 @@ class _VetAvatar extends StatelessWidget {
         color: isDarkMode ? cs.secondary : cs.secondaryContainer,
       ),
       child: ClipOval(
-        child: Image.asset('assets/images/vet_avatar.png', fit: BoxFit.cover),
+        child: Image.asset('lib/assets/images/vet_avatar.png', fit: BoxFit.cover),
       ),
     );
   }
@@ -310,7 +322,7 @@ class _LoginLink extends StatelessWidget {
           style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant),
         ),
         GestureDetector(
-          onTap: context.read<RegisterViewModel>().onLoginPressed,
+          onTap: () => context.go(AppRoutes.login),
           child: Text(
             'Entre aqui',
             style: TextStyle(

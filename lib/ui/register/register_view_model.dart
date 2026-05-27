@@ -9,6 +9,7 @@ class RegisterState {
   final bool isPasswordVisible;
   final bool isLoading;
   final String? errorMessage;
+  final bool isAuthenticated;
 
   const RegisterState({
     this.name = '',
@@ -18,6 +19,7 @@ class RegisterState {
     this.isPasswordVisible = false,
     this.isLoading = false,
     this.errorMessage,
+    this.isAuthenticated = false,
   });
 
   RegisterState copyWith({
@@ -29,6 +31,7 @@ class RegisterState {
     bool? isLoading,
     String? errorMessage,
     bool clearError = false,
+    bool? isAuthenticated,
   }) {
     return RegisterState(
       name: name ?? this.name,
@@ -38,6 +41,7 @@ class RegisterState {
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
     );
   }
 }
@@ -90,19 +94,21 @@ class RegisterViewModel extends ChangeNotifier {
     try {
       // TODO: injetar AuthRepository e chamar o cadastro real.
       await Future.delayed(const Duration(seconds: 2));
+      _state = _state.copyWith(isLoading: false, isAuthenticated: true);
+      notifyListeners();
     } catch (e) {
       _state = _state.copyWith(
         errorMessage: 'Erro ao cadastrar. Tente novamente.',
       );
     } finally {
-      _state = _state.copyWith(isLoading: false);
-      notifyListeners();
+      if (!_state.isAuthenticated) {
+        _state = _state.copyWith(isLoading: false);
+        notifyListeners();
+      }
     }
   }
 
-  void onLoginPressed() {
-    // TODO: navegar de volta para a tela de login
-  }
+  void onLoginPressed() {}
 
   // Privados
   String? _validate() {
@@ -110,7 +116,8 @@ class RegisterViewModel extends ChangeNotifier {
     if (_state.name.trim().length < 2) return 'Nome muito curto.';
     if (_state.email.trim().isEmpty) return 'Informe seu e-mail.';
     if (!_state.email.contains('@')) return 'E-mail inválido.';
-    if (_state.password.length < 8) return 'Senha deve ter ao menos 8 caracteres.';
+    if (_state.password.length < 8)
+      return 'Senha deve ter ao menos 8 caracteres.';
     return null;
   }
 }

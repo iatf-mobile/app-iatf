@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iatf_mobile/routing/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'login_view_model.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -22,6 +23,16 @@ class _LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAuthenticated = context.select<LoginViewModel, bool>(
+      (vm) => vm.state.isAuthenticated,
+    );
+
+    if (isAuthenticated) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.go(AppRoutes.home);
+      });
+    }
+
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -33,12 +44,11 @@ class _LoginView extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
               decoration: BoxDecoration(
-                // surfaceContainerLowest é o branco/quase-branco do Material 3
                 color: cs.surfaceContainerLowest,
                 borderRadius: BorderRadius.circular(28),
                 boxShadow: [
                   BoxShadow(
-                    color: cs.shadow.withOpacity(0.06),
+                    color: cs.shadow.withAlpha(20),
                     blurRadius: 20,
                     offset: const Offset(0, 4),
                   ),
@@ -87,11 +97,12 @@ class _DoctorAvatar extends StatelessWidget {
       width: 120,
       height: 120,
       decoration: BoxDecoration(
-        shape: BoxShape.circle, color: isDarkMode ? cs.secondary : cs.secondaryContainer
+        shape: BoxShape.circle,
+        color: isDarkMode ? cs.secondary : cs.secondaryContainer,
       ),
       child: ClipOval(
         child: Image.asset(
-          'assets/images/doctor_avatar_1000.png',
+          'lib/assets/images/doctor_avatar_1000.png',
           fit: BoxFit.cover,
         ),
       ),
@@ -313,7 +324,7 @@ class _GoogleLoginButton extends StatelessWidget {
       child: OutlinedButton.icon(
         onPressed: context.read<LoginViewModel>().onGoogleLoginPressed,
         icon: SvgPicture.asset(
-          'assets/icons/icon_google.svg',
+          'lib/assets/icons/icon_google.svg',
           width: 24,
           height: 24,
           errorBuilder: (_, _, _) => const Icon(
@@ -356,7 +367,7 @@ class _RegisterLink extends StatelessWidget {
           style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant),
         ),
         GestureDetector(
-          onTap: context.read<LoginViewModel>().onRegisterPressed,
+          onTap: () => context.go(AppRoutes.register),
           child: Text(
             'Cadastre-se',
             style: TextStyle(
