@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../home/home_screen.dart';
 import '../../protocols/protocols_screen.dart';
-
-// Placeholders das telas ainda não criadas
-// import '../../ficha/ficha_screen.dart';
-// import '../../fazendas/fazendas_screen.dart';
+import '../../fazendas/fazendas_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,12 +15,11 @@ class _MainScreenState extends State<MainScreen> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
-  // Telas na ordem da NavigationBar
   static const List<Widget> _screens = [
     HomeScreen(),
     // FichaScreen(),
     ProtocolsScreen(),
-    // FazendasScreen(),
+    FazendasScreen(),
   ];
 
   @override
@@ -32,7 +28,6 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
-  // Chamado ao tocar em um item da NavigationBar
   void _onNavTapped(int index) {
     _pageController.animateToPage(
       index,
@@ -51,16 +46,6 @@ class _MainScreenState extends State<MainScreen> {
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      // FAB aparece apenas na aba Protocolos
-      floatingActionButton: _currentIndex == 2
-          ? FloatingActionButton(
-              onPressed: () {
-                // TODO: criar novo protocolo
-              },
-              child: const Icon(Icons.add_rounded),
-            )
-          : null,
-
       // NavigationBar sincronizada com o PageView
       bottomNavigationBar: NavigationBar(
         backgroundColor: cs.surfaceContainerLow,
@@ -90,7 +75,7 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
 
-      // PageView — permite deslizar entre as telas
+      // Permite deslizar entre as telas
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
